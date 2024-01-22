@@ -1,21 +1,21 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 const navItems = {
-  '/': {
-    name: 'home',
+  "/": {
+    name: "home",
   },
-  '/work': {
-    name: 'work',
+  "/work": {
+    name: "work",
   },
-  '/projects': {
-    name: 'projects',
+  "/projects": {
+    name: "projects",
   },
-  '/contact': {
-    name: 'contact',
+  "/contact": {
+    name: "contact",
   },
 };
 
-export function Navbar() {
+export default function Navbar() {
   return (
     <aside className="-ml-[8px] mb-16 tracking-tight">
       <div className="lg:sticky lg:top-20">

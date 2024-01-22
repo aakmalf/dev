@@ -1,9 +1,9 @@
 const workPage = () => {
-    return (
+  return (
     <div>
-        <h1>Work Page</h1>
+      <h1>Work Page</h1>
     </div>
-    )
-}
+  );
+};
 
-export default workPage
+export default workPage;
