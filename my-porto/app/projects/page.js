@@ -1,4 +1,4 @@
-// import { Card } from "@components/card";
+import Card from "../components/card";
 
 const projectsPage = () => {
   return (
@@ -6,7 +6,9 @@ const projectsPage = () => {
       <h1 className="font-medium text-2xl mb-8 tracking-tighter">
         read my Project
       </h1>
-      {/* <Card /> */}
+      <>
+        <Card />
+      </>
     </div>
   );
 };
