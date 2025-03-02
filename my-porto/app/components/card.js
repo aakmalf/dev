@@ -1,3 +1,7 @@
+import getAllData from "../utils/db";
+
+const projects = await getAllData();
+
 const posts = [
   {
     id: 1,
@@ -65,28 +69,28 @@ const Card = () => {
           </p>
         </div> */}
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t sm:mt-8 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-          {posts.map((post) => (
+          {projects.map((project) => (
             <article
-              key={post.id}
+              key={project._id}
               className="flex max-w-xl flex-col items-start justify-between"
             >
               <div className="flex items-center gap-x-4 text-xs">
                 <a
-                  href={post.category.href}
+                  href={project.category}
                   // className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
                 >
-                  {post.category.title}
+                  {project.category}
                 </a>
               </div>
               <div className="group relative">
                 <h3 className="mt-3 text-lg font-semibold leading-6 group-hover:text-gray-600">
-                  <a href={post.href}>
+                  <a href={project.link}>
                     <span className="absolute inset-0" />
-                    {post.title}
+                    {project.title}
                   </a>
                 </h3>
                 <p className="mt-5 line-clamp-3 text-sm leading-6 ">
-                  {post.description}
+                  {project.desc}
                 </p>
               </div>
             </article>

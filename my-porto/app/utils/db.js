@@ -1,16 +1,35 @@
 import mongoose from "mongoose";
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env.local" });
+
+const uri = process.env.MONGO_URI;
+const collection_name = process.env.COLLECTION;
+
+let cachedConnection = null;
 
 const connect = async () => {
+  if (cachedConnection) {
+    console.log("Using cached database connection");
+    return cachedConnection;
+  }
+
+  cachedConnection = await mongoose.connect(uri);
+  console.log("New database connection established");
+  return cachedConnection;
+};
+
+const getAllData = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://akmalfauzi001:akmal001@cluster0.zltnlci.mongodb.net/myporto?retryWrites=true&w=majority"
-    );
-    console.log(process.env.test);
-    console.log("Connected to database!");
+    await connect();
+    const db = mongoose.connection.db;
+    const collection = db.collection(collection_name);
+    const data = await collection.find({}).toArray();
+    return data;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to fetch data:", error);
+    throw error;
   }
 };
 
-export default connect;
+export default getAllData;
