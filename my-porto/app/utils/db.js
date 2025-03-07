@@ -8,7 +8,7 @@ const collection_name = process.env.COLLECTION;
 
 let cachedConnection = null;
 
-const connect = async () => {
+const connectDB = async () => {
   if (cachedConnection) {
     console.log("Using cached database connection");
     return cachedConnection;
@@ -32,4 +32,4 @@ const getAllData = async () => {
   }
 };
 
-export default getAllData;
+export default connectDB;
