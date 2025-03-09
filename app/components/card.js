@@ -1,11 +1,20 @@
-import connectDB from "../utils/db";
-import Project from "../models/projects";
-import { FaLink } from "react-icons/fa";
 import { FaExternalLinkSquareAlt } from "react-icons/fa";
 
+// Server Action to fetch projects
+const fetchProjects = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/api/projects");
+    const data = await res.json();
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+    return [];
+  }
+};
+
 const Card = async () => {
-  await connectDB();
-  const projects = await Project.find();
+  const projects = await fetchProjects();
+
   return (
     <div className="text-black bg-white dark:text-white dark:bg-[#111010]">
       <div className="mx-auto max-w-2xl lg:mx-0">
@@ -16,7 +25,7 @@ const Card = async () => {
               className="pb-0 mb-0 flex items-start space-y-0"
             >
               <span className="mr-2">•</span>
-              <div>
+              <div className="">
                 <div className="flex items-center">
                   <h3 className="text-m font-bold">{project.title}</h3>
                   <a
@@ -28,7 +37,7 @@ const Card = async () => {
                     <FaExternalLinkSquareAlt className="text-xs" />
                   </a>
                 </div>
-                <div className="ml-4">
+                <div className="ml-4 text-justify">
                   {/* <p className="text-sm">
                     {Array.isArray(project.category)
                       ? project.category.join(", ")

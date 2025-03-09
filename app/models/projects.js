@@ -1,32 +1,34 @@
-import mongoose, { Collection } from "mongoose";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });
 const collection_name = process.env.COLLECTION;
 
-const { Schema } = mongoose;
-
-const projectSchema = new Schema(
-  {
-    title: {
-      type: String,
-      required: true,
-    },
-    desc: {
-      type: String,
-      required: true,
-    },
-    category: {
-      type: String,
-      required: true,
-    },
-    link: {
-      type: String,
-      required: true,
-    },
+const ProjectSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
   },
-  { timestamps: true }
-);
+  desc: {
+    type: String,
+    required: true,
+  },
+  category: {
+    type: String,
+    required: true,
+  },
+  link: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-export default mongoose.models.Project ||
-  mongoose.model("Project", projectSchema, collection_name);
+const Project =
+  mongoose.models.Project ||
+  mongoose.model("Project", ProjectSchema, collection_name);
+
+export default Project;
