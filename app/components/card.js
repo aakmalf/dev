@@ -1,19 +1,25 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { FaLink } from "react-icons/fa";
 import { FaExternalLinkSquareAlt } from "react-icons/fa";
 
-// Server Action to fetch projects
-const fetchProjects = async () => {
-  try {
-    const res = await fetch("http://localhost:3000/api/projects");
-    const data = await res.json();
-    return data.data;
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-    return [];
-  }
-};
+const Card = () => {
+  const [projects, setProjects] = useState([]);
 
-const Card = async () => {
-  const projects = await fetchProjects();
+  useEffect(() => {
+    const fetchProjects = async () => {
+try {
+        const res = await fetch('/api/projects');
+  const data = await res.json();
+        setProjects(data.data);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   return (
     <div className="text-black bg-white dark:text-white dark:bg-[#111010]">

@@ -15,6 +15,9 @@ export function middleware(req) {
     if (!secretKey || secretKey !== process.env.ADMIN_SECRET_KEY) {
       return NextResponse.redirect(`${origin}/`);
     }
+
+    // Allow the request to proceed
+    return NextResponse.next();
   }
 
   return NextResponse.next();

@@ -1,15 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function EditProject({ params }) {
+export default function NewProject() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const secretKey = searchParams.get("key");
-  const { id } = params;
-  const [project, setProject] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
@@ -17,51 +14,6 @@ export default function EditProject({ params }) {
     category: "",
     link: "",
   });
-
-  useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        console.log(`Fetching project with ID: ${id}`);
-        const response = await fetch(`/api/projects/${id}`);
-
-        if (!response.ok) {
-          throw new Error(
-            `Failed to fetch project: ${response.status} ${response.statusText}`
-          );
-        }
-
-        // Check if response has content before parsing JSON
-        const text = await response.text();
-        if (!text) {
-          throw new Error("Empty response from server");
-        }
-
-        const result = JSON.parse(text);
-        console.log("Fetched project data:", result);
-
-        if (result.success && result.data) {
-          setProject(result.data);
-          setFormData({
-            title: result.data.title || "",
-            desc: result.data.desc || "",
-            category: result.data.category || "",
-            link: result.data.link || "",
-          });
-        } else {
-          throw new Error("Invalid data format");
-        }
-      } catch (error) {
-        console.error("Error fetching project:", error);
-        setError(`Failed to fetch project: ${error.message}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) {
-      fetchProject();
-    }
-  }, [id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -71,9 +23,9 @@ export default function EditProject({ params }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(`Updating project with ID: ${id}`, formData);
-      const response = await fetch(`/api/projects/${id}`, {
-        method: "PUT",
+      console.log("Creating new project:", formData);
+      const response = await fetch("/api/projects", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -84,53 +36,33 @@ export default function EditProject({ params }) {
         const errorData = await response.json();
         console.error("Server error:", errorData);
         throw new Error(
-          `Failed to update project: ${response.status} ${response.statusText}`
+          `Failed to create project: ${response.status} ${response.statusText}`
         );
       }
 
       const result = await response.json();
-      console.log("Updated project:", result);
+      console.log("Created project:", result);
 
       // Redirect back to admin page with the secret key
       router.push(`/admin?key=${secretKey}`);
     } catch (error) {
-      console.error("Error updating project:", error);
-      setError(`Failed to update project: ${error.message}`);
+      console.error("Error creating project:", error);
+      setError(`Failed to create project: ${error.message}`);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center min-h-screen py-4 bg-white dark:bg-gray-900">
-        <div className="text-center p-6">
-          <p className="text-gray-600 dark:text-gray-300">Loading project...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center min-h-screen py-4 bg-white dark:bg-gray-900">
-        <div className="text-center p-6">
-          <p className="text-red-500">{error}</p>
-          <button
-            onClick={() => router.push(`/admin?key=${secretKey}`)}
-            className="mt-4 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-          >
-            Back to Admin
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col items-center min-h-screen py-4 bg-white dark:bg-gray-900">
       <div className="w-full max-w-2xl px-4">
         <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
-          Edit Project
+          Add New Project
         </h1>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -194,7 +126,7 @@ export default function EditProject({ params }) {
               type="submit"
               className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             >
-              Update Project
+              Create Project
             </button>
 
             <button
